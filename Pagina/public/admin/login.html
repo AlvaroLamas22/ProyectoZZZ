@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login de Administrador - Wiki ZZZ</title>
+    <link href="../style.css" rel="stylesheet">
+</head>
+<body class="body-login">
+    <video autoplay muted loop playsinline id="video-fondo">
+          <source src="../video/fondo.webm" type="video/webm">
+          
+      </video>
+
+    <header>
+        <img src="../img/Logo.webp">
+        <h1>PROXYHUB</h1>
+        <img src="../img/fondo2.jpg">
+    </header>
+
+    <main class="main-login">
+        <div class="caja-boceto caja-login">
+            <h2 class="admin-form-titulo">Acceso Administrador</h2>
+            <p class="texto-login">Introduce tus credenciales para gestionar los agentes.</p>
+
+            <form id="login-form" method="post" class="form-grid-admin">
+                <div class="col-span-2">
+                    <label for="usuario">Nombre de Usuario</label>
+                    <input type="text" id="usuario" name="usuario" class="input-admin" required placeholder="Tu nombre...">
+                </div>
+
+                <div class="col-span-2">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" class="input-admin" required placeholder="Tu clave...">
+                </div>
+
+                <div id="mensaje-error" class="mensaje-error hidden"></div>
+
+                <div class="col-span-2 admin-btn-group">
+                    <input type="submit" class="btn-admin" value="Entrar">
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 - Sección de Administración Privada</p>
+    </footer>
+
+    <script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+/* --- Estilos para los bloques dinámicos de equipos --- */
+.bloque-equipo {
+    background-color: #111; 
+    border: 1px dashed #555; 
+    padding: 15px; 
+    margin-bottom: 15px; 
+    border-radius: 8px; 
+    position: relative;
+}
+
+.btn-eliminar-equipo {
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    padding: 4px 10px; 
+    cursor: pointer; 
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 10;
+}

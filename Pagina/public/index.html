@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZZZGuiasESP</title>
+  <link href="style.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+      <img src="img/Logo.webp">
+      <h1>PROXYHUB</h1>
+      <img src="img/fondo2.jpg">
+    </header>
+    <button id="btn-toggle-nav">AGENTES ◂</button>
+    <div class="contenedor-principal"> 
+      <video autoplay muted loop playsinline id="video-fondo">
+          <source src="video/fondo.webm" type="video/webm">
+          
+      </video>
+      <main>
+          <h1>Bienvenido a PROXYHUB</h1>
+          <h4>En nuestra página puedes ver todos los personajes del Zenless Zone Zero. Selecciona un personaje a la derecha</h4>
+          <img src="img/Portada.webp">
+      </main>
+
+      <nav id="nav-agentes">
+        <div class="buscador-container">
+            <input type="text" id="input-buscador" placeholder="Search for Unit...">
+        </div>
+
+        <div id="grid-agentes">
+        </div>
+      </nav>
+    </div>
+    <footer>
+
+    </footer>
+<script src="script.js"></script>
+</body>
+</html>

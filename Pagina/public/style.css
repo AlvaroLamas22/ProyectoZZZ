@@ -1,0 +1,851 @@
+/* -------------------------- 1. ESTILOS BASE (Generales) -------------------------- */
+* {
+    box-sizing: border-box;
+}
+
+/*-------------------------- BODY --------------------------*/
+body {
+    margin: 0; 
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+}
+
+#video-fondo {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    object-fit: cover; 
+    z-index: -100; 
+}
+
+/* Utilidades globales (Mensajes de error/carga/textos) */
+.msg-cargando { color: white; padding: 20px; font-style: italic; }
+.msg-error { color: #ff4a4a; padding: 40px; font-weight: bold; }
+.no-data { color: #888; font-style: italic; font-size: 0.9rem; margin: 0; }
+.linea-separadora { border: 0; border-top: 1px solid #333; margin: 10px 0; }
+.texto-elemento { color: #ffd700; }
+
+/* -------------------------- 2. ESTRUCTURA PRINCIPAL (Header, Main, Footer) -------------------------- */
+
+/* -------------------------- HEADER --------------------------*/
+header {
+    background-color: black;
+    padding: 0 30px; 
+    min-height: 80px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+header h1 {
+    color: white; 
+    margin: 0;
+    margin-bottom: 15px;
+    font-size: 3rem;
+}
+
+header img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.contenedor-principal {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/*-------------------------- MAIN --------------------------*/
+main {
+    flex: 1; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding-top: 80px;
+    gap: 20px;
+}
+
+main h1 {
+    margin: 0 0 15px 0;
+    font-size: 3rem;
+    color: #333; 
+}
+
+main h4 {
+    margin: 0 0 50px 0;
+    font-size: 1.2rem;
+    color: #555;
+    max-width: 600px;
+}
+
+main img {
+    max-width: 700px;
+    width: 90%;
+    height: auto;
+    border: 3px solid black;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+
+/*-------------------------- FOOTER --------------------------*/
+footer {
+    background-color: black;
+    padding: 20px;
+    min-height: 60px;
+}
+
+/* -------------------------- 3. BARRA LATERAL (Menú y Buscador) -------------------------- */
+#nav-agentes {
+    position: fixed;
+    top: 80px;
+    right: -320px;
+    width: 320px; 
+    height: calc(100vh - 140px); /* Resta header y footer */
+    background-color: rgba(10, 10, 10, 0.95);
+    border-left: 2px solid #333;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: right 0.3s ease; 
+}
+
+#nav-agentes.abierto { right: 0; }
+
+#btn-toggle-nav {
+    position: fixed;
+    top: 50%; 
+    right: 0;
+    transform: translateY(-50%);
+    background-color: #ffd700; 
+    color: black;
+    border: none;
+    padding: 15px 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 101; 
+    border-radius: 10px 0 0 10px; 
+    box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+    transition: right 0.3s ease; 
+}
+
+#btn-toggle-nav.movido { right: 320px; }
+
+.buscador-container {
+    padding: 20px;
+    background-color: #000;
+    border-bottom: 2px solid #222;
+}
+
+#input-buscador {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 25px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+#input-buscador:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+#grid-agentes {
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    gap: 10px; 
+}
+
+/* -------------------------- 4. TARJETAS DE AGENTES -------------------------- */
+.tarjeta-agente {
+    position: relative;
+    width: 135px;  
+    height: 120px; 
+    cursor: pointer;
+    transition: transform 0.2s;
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+.tarjeta-agente:hover {
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.capa-personaje {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+.capa-info {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 6px;
+    padding-top: 25px;
+    z-index: 2;
+}
+
+.capa-nombre {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 2px 2px 4px black;
+    letter-spacing: 0.5px;
+}
+
+.datos-extra {
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.elemento { color: #e0e0e0; text-shadow: 1px 1px 2px black; }
+.rareza-s { color: #FFD700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.6); } 
+.rareza-a { color: #D885FF; text-shadow: 0 0 5px rgba(216, 133, 255, 0.6); }
+
+/* -------------------------- 5. PÁGINA DE DETALLES -------------------------- */
+.perfil-boceto {
+    width: 100%;
+    padding: 0 20px;
+    color: white;
+    text-align: left;
+}
+
+.titulo-personaje {
+    color: white;
+    font-size: 5rem;
+    font-weight: 800;
+    margin: 10px 0 30px 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 
+        3px 3px 0px #000, 
+        -2px -2px 0px #000, 
+        2px -2px 0px #000, 
+        -2px 2px 0px #000,
+        0px 15px 25px rgba(0,0,0,0.8);
+}
+
+.grid-boceto {
+    display: grid;
+    grid-template-columns: 320px repeat(3, 1fr); 
+    grid-auto-rows: min-content; 
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* --- Contenedor de Datos --- */
+.caja-boceto {
+    background: linear-gradient(135deg, rgba(15, 15, 15, 0.9) 0%, rgba(30, 30, 30, 0.8) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.2); 
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.6); 
+    backdrop-filter: blur(5px);
+}
+
+.caja-boceto.caja-doble { grid-column: span 2; }
+
+.caja-boceto h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    color: white;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.contenido-caja {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    color: #ddd;
+    line-height: 1.5;
+}
+
+.layout-descripcion {
+    display: flex;
+    gap: 25px; 
+    align-items: center; 
+}
+
+.col-foto {
+    flex: 0 0 180px; 
+    display: flex;
+    justify-content: center;
+}
+
+.foto-descripcion {
+    width: 100%;
+    height: auto;
+    max-height: 280px; 
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); 
+}
+
+.col-texto {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* -------------------------- 6. COMPONENTES INTERNOS DE LAS CAJAS -------------------------- */
+
+/* Tablas de Stats */
+.stats-tbl { 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 0.9rem; 
+}
+
+.stats-tbl td {
+    padding: 6px 0; 
+    border-bottom: 1px solid #333; 
+}
+
+.stats-tbl td:first-child {
+    color: #ccc;
+}
+
+.stats-tbl td:last-child {
+    text-align: right;
+    color: #ffd700;
+    font-family: monospace; 
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Layout especial de Discos */
+.layout-discos { 
+    display: flex; 
+    gap: 20px;
+}
+
+.col-build { 
+    flex: 1;
+}
+
+.col-stats {
+    flex: 1; 
+    border-left: 1px solid #333; 
+    padding-left: 15px; 
+}
+
+/* Discos (Imágenes y Textos) */
+.contenedor-discos { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.item-disco { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.img-disco {
+    width: 60px !important; 
+    min-width: 60px !important; 
+    height: 60px !important;
+    border-radius: 50%; 
+    object-fit: contain; 
+    border: 2px solid #555; 
+    background-color: #111;
+}
+
+.info-disco { 
+    flex: 1; 
+}
+
+.label-disco { 
+    color: #ffd700; 
+}
+
+.desc-disco { 
+    font-size: 0.8rem; 
+    color: #aaa; margin-top: 
+    4px; line-height: 1.4; 
+}
+
+/* Stats Objetivo */
+.tabla-discos { 
+    margin-bottom: 15px; 
+}
+
+.val-disco { 
+    text-align: right; 
+    color: #ddd; 
+}
+
+.titulo-stats-obj, .titulo-endgame { 
+    color: #aaa; 
+    font-style: italic; 
+    margin: 0; 
+}
+
+.titulo-endgame { 
+    margin-top: 10px; 
+    border-top: 1px solid #333; 
+    padding-top: 10px; 
+}
+
+.val-meta { 
+    text-align: right; 
+	color: #ffd700; 
+	font-family: monospace; 
+	font-size: 1.1rem; 
+	font-weight: bold; 
+}
+
+/* Materiales */
+.contenedor-materiales { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 15px; 
+    height: 100%; 
+    align-content: space-evenly; 
+    justify-items: center; 
+}
+
+.item-material { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; 
+}
+
+.img-material {
+    width: 75%; 
+    max-width: 150px; 
+    aspect-ratio: 1 / 1;
+    border-radius: 12px; 
+    object-fit: cover; 
+    padding: 0;
+    background-color: #222; 
+    border: 1px solid #444;
+}
+
+.img-material:hover {
+    transform: scale(1.1);
+    border-color: #ffd700;
+}
+
+.cantidad-material { 
+    font-size: 14px; 
+    color: #ddd; 
+    margin-top: 8px; 
+    font-weight: bold; 
+    text-align: center;
+}
+
+/* Armas (W-Engines) */
+.contenedor-armas { 
+	display: flex; 
+	flex-direction: column; 
+	gap: 10px; 
+}
+
+.item-arma {
+    display: flex; 
+	align-items: center; 
+	gap: 10px;
+    background: rgba(255, 255, 255, 0.05); 
+	padding: 8px 12px;
+    border-radius: 8px; 
+	border: 1px solid #333;
+}
+.rank-arma {
+    background: #222; 
+	padding: 5px 10px; 
+	border-radius: 5px;
+    color: #ffd700; 
+	font-weight: bold; 
+	border: 1px solid #444; 
+}
+.img-arma {
+    width: 40px !important; 
+	min-width: 40px !important; 
+	height: 40px !important;
+    border-radius: 50%; 
+	object-fit: cover; 
+	border: 1px solid #444;
+}
+.nombre-arma { 
+	color: #fff; 
+	font-size: 0.95rem; 
+}
+
+/* Cine Mental */
+.lista-cine-mental { 
+    padding-left: 20px; 
+    margin: 0; 
+    color: #ddd; 
+}
+
+.lista-cine-mental li { 
+    margin-bottom: 8px; 
+    line-height: 1.4; 
+}
+
+.num-cine { color: #ffd700; }
+
+.desc-cine { color: #ccc; }
+
+/* Equipos Recomendados */
+.contenedor-equipos { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.item-equipo {
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid #333;
+    border-radius: 8px; 
+    padding: 12px;
+}
+
+.titulo-equipo {
+    display: block; 
+    color: #fff; 
+    font-size: 1rem; 
+    margin-bottom: 12px;
+    border-bottom: 1px solid #444; 
+    padding-bottom: 6px;
+}
+
+.fila-avatares { 
+    display: flex; 
+    gap: 15px; 
+    align-items: flex-start; 
+}
+
+.caja-avatar { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    width: 60px; 
+}
+
+.img-avatar {
+    width: 45px !important; 
+    min-width: 45px !important; 
+    height: 45px !important;
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid #555;
+    background-color: #222; 
+    margin-bottom: 6px;
+}
+
+.nombre-avatar { 
+    font-size: 0.75rem; 
+    color: #ccc; 
+    line-height: 1.2; 
+    word-wrap: break-word; 
+}
+
+.avatar-bangboo {
+    margin-left: auto; 
+    border-left: 1px dashed #444;
+    padding-left: 15px; 
+}
+
+.img-bangboo { 
+    border-color: #44aaff; 
+}
+
+.bangboo-texto { 
+    color: #44aaff; 
+    font-weight: bold; 
+}
+
+/* Ventajas vs Jefes */
+.titulo-ventajas { 
+    color: #ffd700; 
+    display: block; 
+    margin-bottom: 15px; 
+}
+
+.contenedor-ventajas { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.item-ventaja {
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05); 
+    padding: 10px 15px;
+    border-radius: 8px; 
+    border: 1px solid #333;
+}
+
+.img-jefe {
+    width: 50px; 
+    min-width: 50px; 
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover; 
+    border: 1px solid #555; 
+    background-color: #222;
+}
+
+.info-jefe { 
+    flex: 1; 
+    line-height: 1.4; 
+    font-size: 0.9rem; 
+}
+
+.nombre-jefe { 
+    color: #ff4a4a; 
+    font-size: 1rem; 
+}
+
+.razon-jefe { color: #ccc; }
+
+/* -------------------------- 7. ESTILOS ESPECÍFICOS PARA LOGIN -------------------------- */
+
+.main-login {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 20px;
+}
+
+.caja-login {
+    width: 100%;
+    max-width: 420px; 
+    margin: 0 auto;
+}
+
+.texto-login { color: #ccc;} 
+
+.btn-admin { width: 100%; }
+
+/* -------------------------- 8. FORMULARIOS DE ADMINISTRADOR -------------------------- */
+.admin-form-container {
+    display: block;
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+.admin-form-titulo {
+    color: #ffd700;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.subtitulo-seccion-admin {
+    color: #ccc; 
+    border-bottom: 1px solid #333; 
+    margin-top: 15px; 
+    margin-bottom: -5px;
+    padding-bottom: 5px;
+}
+
+.form-grid-admin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.form-grid-admin label {
+    color: #ccc;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.input-admin {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: #1a1a1a;
+    border: 2px solid #444;
+    border-radius: 6px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-top: 5px;
+}
+
+.input-admin:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.textarea-admin {
+    resize: vertical; /* Permite estirarlo solo hacia abajo */
+}
+
+.col-span-2 {
+    grid-column: span 2;
+}
+
+.msg-form-admin {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    min-height: 24px;
+}
+
+.admin-btn-group {
+    text-align: center;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn-admin.btn-pequeno {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+/* -------------------------- 9. DISEÑO RESPONSIVE (Móviles y Tablets) -------------------------- */
+@media (max-width: 1400px) {
+    .grid-boceto { grid-template-columns: repeat(2, 1fr); }
+    .caja-boceto.caja-doble { grid-column: span 1; }
+}
+
+@media (max-width: 900px) {
+    .grid-boceto { grid-template-columns: 1fr; }
+    .caja-boceto.caja-doble { grid-column: span 1; }
+    .layout-discos { flex-direction: column; }
+    .layout-descripcion { 
+        flex-direction: column; 
+        text-align: center;
+    }
+    .col-foto { 
+        flex: auto; 
+        width: 100%; 
+        max-width: 250px; 
+    }
+    .col-stats { 
+		border-left: none; 
+		padding-left: 0; 
+		margin-top: 15px; 
+		border-top: 1px solid #333; 
+		padding-top: 15px; 
+	}
+    .form-grid-admin { grid-template-columns: 1fr; }
+    .col-span-2 { grid-column: span 1; }
+    .admin-btn-group { flex-direction: column; }
+}
+
+/* -------------------------- 10. ESTILOS DEL PANEL DE CONTROL -------------------------- */
+.panel-control-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    color: #ccc;
+}
+
+.panel-control-box h1 {
+    color: #ffd700; 
+    font-size: 2.2rem;
+    margin: 10px 0 5px 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); 
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+}
+
+
+.panel-control-box h4 {
+    color: #ccc; 
+    font-size: 1.1rem;
+    margin: 15px 0 30px 0;
+    font-weight: normal;
+}
+
+.contenedor-botones-admin {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: center;
+}
+
+.contenedor-botones-admin .btn-admin {
+    width: 100%; 
+    max-width: 300px;
+}
+
+
+.btn-peligro {
+    background-color: #222 !important; 
+    color: #ff4a4a !important; 
+    border: 1px solid #ff4a4a !important;
+}
+
+.btn-peligro:hover {
+    background-color: #ff4a4a !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(255, 74, 74, 0.4) !important;
+}
+
+
+.link-salir {
+    color: #aaa;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 10px;
+}
+
+.link-salir:hover {
+    color: #ff4a4a;
+    text-shadow: 0 0 10px rgba(255, 74, 74, 0.4);
+    transform: scale(1.05);
+}
